@@ -258,18 +258,39 @@ export default function ValuationWizard() {
           {step === 4 && (
             <>
               <p className="step-intro">Tu opinión importa. La compararemos con los datos reales de venta en {formData.municipality || 'tu zona'} para darte una valoración honesta.</p>
-              <label className="field-label" htmlFor="ownerPrice">Precio estimado</label>
-              <div className="price-input">
-                <input id="ownerPrice" type="text" inputMode="numeric" placeholder="350.000"
-                  value={formData.ownerPrice} onChange={(e) => set('ownerPrice', formatThousands(e.target.value))} />
-                <span>€</span>
+              <label className="field-label" htmlFor="ownerPrice">Precio estimado de venta</label>
+              <div className="price-input-wrapper">
+                <div className="price-input">
+                  <input
+                    id="ownerPrice"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="350.000"
+                    autoComplete="off"
+                    value={formData.ownerPrice}
+                    onChange={(e) => set('ownerPrice', formatThousands(e.target.value))}
+                  />
+                  <span className="currency-symbol">€</span>
+                </div>
               </div>
-              <div className="tag-wrap price-hints">
-                {PRICE_HINTS.map((p) => (
-                  <button type="button" key={p} className="tag" onClick={() => set('ownerPrice', formatThousands(p))}>
-                    {p >= 1000000 ? '1M €' : `${p / 1000}k €`}
-                  </button>
-                ))}
+              <p className="hint" style={{ marginTop: '0.8rem', marginBottom: '0.4rem', fontWeight: 500 }}>
+                O selecciona una estimación rápida:
+              </p>
+              <div className="price-hints-grid">
+                {PRICE_HINTS.map((p) => {
+                  const formatted = formatThousands(p);
+                  const isSelected = formData.ownerPrice === formatted;
+                  return (
+                    <button
+                      type="button"
+                      key={p}
+                      className={`price-hint-btn ${isSelected ? 'is-active' : ''}`}
+                      onClick={() => set('ownerPrice', formatted)}
+                    >
+                      {p >= 1000000 ? '1M €' : `${p / 1000}k €`}
+                    </button>
+                  );
+                })}
               </div>
             </>
           )}
